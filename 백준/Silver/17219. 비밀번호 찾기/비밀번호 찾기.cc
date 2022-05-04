@@ -28,12 +28,11 @@ int main() {
 	cin >> a >> b;
 	for (i = 0; i < a; i++) {
 		cin >> c >> d;
-		m.insert(make_pair(c, d));
+		m[c] = d;
 	}
 	for (i = 0; i < b; i++) {
 		cin >> d;
-		map<string, string>::iterator iter = m.find(d);
-		cout << iter->second << '\n';
+		cout << m[d] << '\n';
 	}
 	
 	return 0;
