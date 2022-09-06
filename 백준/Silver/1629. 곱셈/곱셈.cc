@@ -13,41 +13,34 @@
 #include <set>
 #include <cstring>
 #include <array>
+#include <climits>
+#include <cstdlib>
+#include <utility>
+#include <regex>
+#include <numeric>
 
 using namespace std;
 
-long long temp;
-long long temp2;
+long long a, b, c;
 
-long long mit;
-
-long long divide;
-
-long long times(long long n) {
-	if (n == 0) return 1;
-
-	temp = times(n / 2);
-	temp2 = temp * temp % divide;
-
-	if (n % 2 == 0) {
-		return temp * temp % divide;
-	}
-	else if (n % 2 == 1) {
-		return (temp * temp % divide * mit) % divide;
-	}
+long long solve(long long n, long long m) {
+    long long ans = 1;
+    while(m) {
+        if (m % 2 == 1) {
+            ans = ans * n % c;
+        }
+        m = m / 2;
+        n = n * n % c;
+    }
+    return ans % c;
 }
 
 int main() {
-	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+    ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 
-	long long a;
-	long long c;
+    cin >> a >> b >> c;
 
-	cin >> mit >> a >> divide;
+    cout << solve(a, b);
 
-	c = times(a);
-
-	cout << c << '\n';
-
-	return 0;
+    return 0;
 }
