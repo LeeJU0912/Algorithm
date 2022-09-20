@@ -29,6 +29,10 @@
 
 using namespace std;
 
+struct save {
+    int chance, go;
+    int x, y;
+};
 int N, M, K;
 int board[1000][1000];
 bool visited[1000][1000][10];
@@ -37,15 +41,17 @@ int dx[4] = {-1, 1, 0 , 0};
 int dy[4] = {0, 0, 1, -1};
 
 void bfs() {
-    queue<pair<pair<int, int>, pair<int, int>>> q;
-    q.push({{0, 1}, {0, 0}});
+    queue<save> q;
+
+    save temp = {0, 1, 0, 0};
+    q.push(temp);
     visited[0][0][0] = true;
 
     while(!q.empty()) {
-        int chance = q.front().first.first;
-        int go = q.front().first.second;
-        int now_x = q.front().second.first;
-        int now_y = q.front().second.second;
+        int chance = q.front().chance;
+        int go = q.front().go;
+        int now_x = q.front().x;
+        int now_y = q.front().y;
         q.pop();
 
         if (now_x == N - 1 && now_y == M - 1) {
@@ -62,12 +68,12 @@ void bfs() {
 
             if (board[next_x][next_y] == 0) {
                 visited[next_x][next_y][chance] = true;
-                q.push({{chance, go + 1}, {next_x, next_y}});
+                q.push({chance, go + 1, next_x, next_y});
             }
             else {
                 if (chance < K) {
                     visited[next_x][next_y][chance + 1] = true;
-                    q.push({{chance + 1, go + 1}, {next_x, next_y}});
+                    q.push({chance + 1, go + 1, next_x, next_y});
                 }
             }
         }
