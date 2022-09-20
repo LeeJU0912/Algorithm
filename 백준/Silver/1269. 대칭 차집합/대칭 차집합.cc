@@ -29,7 +29,8 @@
 using namespace std;
 
 int x, y;
-set<int> a;
+vector<int> a;
+vector<int> b;
 int counter;
 
 int main() {
@@ -37,16 +38,27 @@ int main() {
 
     cin >> x >> y;
 
-    for (int i = 0; i < x + y; i++) {
+    for (int i = 0; i < x; i++) {
         int temp;
         cin >> temp;
-        if (a.find(temp) != a.end()) {
-            counter++;
-            continue;
-        }
-        a.insert(temp);
+        a.push_back(temp);
     }
-    cout << a.size() - counter;
+
+    for (int i = 0; i < y; i++) {
+        int temp;
+        cin >> temp;
+        b.push_back(temp);
+    }
+
+    sort(b.begin(), b.end());
+
+    for (int i = 0; i < x; i++) {
+        if (binary_search(b.begin(), b.end(), a[i])) {
+            counter++;
+        }
+    }
+
+    cout << x + y - counter * 2;
 
     return 0;
 }
