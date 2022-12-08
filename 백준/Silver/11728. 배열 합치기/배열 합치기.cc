@@ -5,7 +5,7 @@ int main() {
     ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 
 
-    priority_queue<int, vector<int>, greater<>> pq;
+    vector<int> v;
 
     int a, b;
     cin >> a >> b;
@@ -13,18 +13,19 @@ int main() {
     for (int i = 0; i < a; i++) {
         int temp;
         cin >> temp;
-        pq.push(temp);
+        v.emplace_back(temp);
     }
 
     for (int i = 0; i < b; i++) {
         int temp;
         cin >> temp;
-        pq.push(temp);
+        v.emplace_back(temp);
     }
 
-    while(!pq.empty()) {
-        cout << pq.top() << ' ';
-        pq.pop();
+    sort(v.begin(), v.end());
+
+    for (auto i : v) {
+        cout << i << ' ';
     }
 
     return 0;
