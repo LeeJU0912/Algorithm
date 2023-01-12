@@ -1,70 +1,47 @@
-#include <iostream>
-#include <cmath>
-#include <ctime>
-#include <algorithm>
-#include <stack>
-#include <queue>
-#include <deque>
-#include <string>
-#include <vector>
-#include <tuple>
-#include <functional>
-#include <map>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-int v[129][129];
+int N;
 
-int white;
+int paper[129][129];
+
 int blue;
+int white;
 
-int papercut(int x, int y, int a) {
-	int i, g;
-
-	int counter = 0;
-	for (i = y; i < y + a; i++) {
-		for (g = x; g < x + a; g++) {
-			counter += v[i][g];
-		}
-	}
-	if (counter == 0) {
-		white += 1;
-		return 0;
-	}
-	else if (counter == a * a) {
-		blue += 1;
-		return 0;
-	}
-
-	else {
-		papercut(x, y, a / 2);
-		papercut(x, y + a / 2, a / 2);
-		papercut(x + a / 2, y, a / 2);
-		papercut(x + a / 2, y + a / 2, a / 2);
-	}
-
-	return 0;
+void solve(int x, int y, int multi) {
+    if (multi == 0) return;
+    int counter = 0;
+    for (int i = x; i < x + multi; i++) {
+        for (int j = y; j < y + multi; j++) {
+            if (paper[i][j] == 1) counter++;
+        }
+    }
+    if (counter == multi * multi) blue++;
+    else if (counter == 0) {
+        white++;
+    }
+    else {
+        solve(x, y, multi / 2);
+        solve(x + multi / 2, y, multi / 2);
+        solve(x, y + multi / 2, multi / 2);
+        solve(x + multi / 2, y + multi / 2, multi / 2);
+    }
 }
 
-
 int main() {
-	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+    ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 
-	int a, b;
-	int i, g;
+    cin >> N;
 
-	cin >> a;
-	cin.ignore();
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            cin >> paper[i][j];
+        }
+    }
 
-	for (i = 0; i < a; i++) {
-		for (g = 0; g < a; g++) {
-			cin >> v[i][g];
-		}
-	}
+    solve(0, 0, N);
 
-	papercut(0, 0, a);
+    cout << white << '\n' << blue;
 
-	cout << white << "\n" << blue << '\n';
-
-	return 0;
+    return 0;
 }
