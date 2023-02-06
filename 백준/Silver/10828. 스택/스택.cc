@@ -1,62 +1,52 @@
-#include <iostream>
-
-int box[10000];
+#include <bits/stdc++.h>
+#define FastIO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
+using namespace std;
 
 int main() {
-	int num;
-	int i;
-	int x = 5;
-	int sum = 0;
-	int counter = 0;
-	char order[100];
+    FastIO
 
+    int N;
+    cin >> N;
 
-	std::cin >> num;
-	std::cin.ignore();
+    stack<int> stk;
 
-	for (i = 0; i < num; i++) {
-		std::cin.getline(order, 100, '\n');
-		if (order[0] == 'p' && order[1] == 'u' && order[2] == 's' && order[3] == 'h') {
-			x = 5;
-			sum = 0;
-			while (order[x] != NULL) {
-				sum = sum * 10;
-				sum = sum + int(order[x]) - 48;
-				x += 1;
-			}
-			box[counter] = sum;
-			counter += 1;
-		}
-		else if (order[0] == 't' && order[1] == 'o' && order[2] == 'p') {
-			if (counter == 0) {
-				std::cout << "-1" << std::endl;
-			}
-			else {
-				std::cout << box[counter - 1] << std::endl;
-			}
-		}
-		else if (order[0] == 's' && order[1] == 'i' && order[2] == 'z' && order[3] == 'e') {
-			std::cout << counter << std::endl;
-		}
-		else if (order[0] == 'p' && order[1] == 'o' && order[2] == 'p') {
-			if (counter == 0) {
-				std::cout << "-1" << std::endl;
-			}
-			else {
-				std::cout << box[counter - 1] << std::endl;
-				counter -= 1;
-			}
-		}
-		else if (order[0] == 'e' && order[1] == 'm' && order[2] == 'p' && order[3] == 't' && order[4] == 'y') {
-			if (counter == 0) {
-				std::cout << "1" << std::endl;
-			}
-			else {
-				std::cout << "0" << std::endl;
-			}
-		}
+    for (int i = 0; i < N; i++) {
+        string s;
+        cin >> s;
+        if (s == "push") {
+            int a;
+            cin >> a;
+            stk.push(a);
+        }
+        else if (s == "pop") {
+            if (stk.empty()) {
+                cout << -1 << '\n';
+            }
+            else {
+                cout << stk.top() << '\n';
+                stk.pop();
+            }
+        }
+        else if (s == "size") {
+            cout << stk.size() << '\n';
+        }
+        else if (s == "empty") {
+            if (stk.empty()) {
+                cout << 1 << '\n';
+            }
+            else {
+                cout << 0 << '\n';
+            }
+        }
+        else if (s == "top") {
+            if (stk.empty()) {
+                cout << -1 << '\n';
+            }
+            else {
+                cout << stk.top() << '\n';
+            }
+        }
+    }
 
-	}
-
-	return 0;
+    return 0;
 }
