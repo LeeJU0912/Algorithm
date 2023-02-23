@@ -11,41 +11,36 @@ int main() {
     int N;
     cin >> N;
 
-    vector<int> save(N);
+    vector<int> DP(1001, INT_MAX);
+
+    queue<int> save;
+    save.push(A);
+    DP[A] = 0;
 
     for (int i = 0; i < N; i++) {
-        cin >> save[i];
+        int temp;
+        cin >> temp;
+        save.push(temp);
+        if (DP[temp]) {
+            DP[temp] = 1;
+        }
     }
 
-    int ans = 0;
+    while(!save.empty()) {
+        int now = save.front();
+        save.pop();
 
-    if (A < B) {
-        sort(save.begin(), save.end());
-        int gap = INT_MAX;
-        int go = A;
-        for (int i = 0; i < N; i++) {
-            if (abs(B - save[i]) < gap) {
-               go = save[i];
-               gap = abs(B - save[i]);
+        for (int i = -1; i <= 1; i += 2) {
+            int next = now + i;
+            if (next <= 0 || next > 1000) continue;
+            if (DP[next] > DP[now] + 1) {
+                DP[next] = DP[now] + 1;
+                save.push(next);
             }
         }
-        ans = abs(B - go) + 1;
-    }
-    else {
-        sort(save.begin(), save.end(), greater<>());
-        int gap = INT_MAX;
-        int go = A;
-        for (int i = 0; i < N; i++) {
-            if (abs(B - save[i]) < gap) {
-                go = save[i];
-                gap = abs(B - save[i]);
-            }
-        }
-        ans = abs(go - B) + 1;
     }
 
-    cout << min(ans, abs(A - B));
-
+    cout << DP[B];
 
     return 0;
 }
