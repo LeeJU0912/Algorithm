@@ -1,0 +1,8 @@
+-- 코드를 입력하세요
+SELECT crcrh.CAR_ID
+FROM CAR_RENTAL_COMPANY_CAR crcc
+JOIN CAR_RENTAL_COMPANY_RENTAL_HISTORY crcrh
+ON crcc.CAR_ID = crcrh.CAR_ID
+WHERE crcc.CAR_TYPE = "세단" and crcrh.START_DATE >= '2022-10-01'
+GROUP BY crcrh.CAR_ID
+ORDER BY crcrh.CAR_ID desc
