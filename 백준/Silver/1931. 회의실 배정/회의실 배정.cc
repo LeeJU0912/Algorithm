@@ -1,55 +1,42 @@
-#include <iostream>
-#include <cmath>
-#include <ctime>
-#include <algorithm>
-#include <stack>
-#include <queue>
-#include <deque>
-#include <string>
-#include <vector>
-#include <tuple>
-#include <functional>
-#include <map>
-
+#include <bits/stdc++.h>
+#define FastIO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 using namespace std;
 
-vector<pair<int, int>> v;
-
-bool compare(pair<int, int> a, pair<int, int>b) {
-	if (a.second == b.second) {
-		return a.first < b.first;
-	}
-	else {
-		return a.second < b.second;
-	}
+bool compare(pair<int, int> a, pair<int, int> b) {
+    if (a.second == b.second) {
+        return a.first < b.first;
+    }
+    return a.second < b.second;
 }
 
 int main() {
-	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+    FastIO
 
-	int a, b, c;
-	int i;
+    int N;
+    cin >> N;
 
-	cin >> a;
-	cin.ignore();
+    vector<pair<int, int>> save;
 
-	for (i = 0; i < a; i++) {
-		cin >> b >> c;
-		v.push_back(make_pair(b, c));
-	}
-	
-	sort(v.begin(), v.end(), compare);
+    for (int i = 0; i < N; i++) {
+        int a, b;
+        cin >> a >> b;
 
-	int g = v[0].second;
-	int counter = 1;
-	for (i = 1; i < v.size(); i++) {
-		if (g <= v[i].first) {
-			g = v[i].second;
-			++counter;
-		}
-	}
+        save.emplace_back(a, b);
+    }
 
-	cout << counter << '\n';
+    sort(save.begin(), save.end(), compare);
 
-	return 0;
+    int ans = 1;
+    int end_time = save[0].second;
+
+    for (int i = 1; i < save.size(); i++) {
+        if (end_time <= save[i].first) {
+            end_time = save[i].second;
+            ans++;
+        }
+    }
+
+    cout << ans;
+
+    return 0;
 }
