@@ -1,56 +1,27 @@
-#include <iostream>
-#include <cmath>
-#include <ctime>
-#include <algorithm>
-#include <stack>
-#include <queue>
-#include <deque>
-#include <string>
-#include <vector>
-#include <tuple>
-#include <functional>
-#include <map>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-map<int, int> m;
-
-int num[1000000];
-int num2[1000000];
-
 int main() {
-	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+    ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 
-	int a, b, c;
-	int i;
-	int min = 1000000001;
-	int counter = 1;
+    int N;
+    cin >> N;
 
-	cin >> a;
-	cin.ignore();
+    vector<int> save(N);
 
-	for (i = 0; i < a; i++) {
-		cin >> b;
-		num[i] = b;
-		num2[i] = b;
-	}
+    for (int i = 0; i < N; i++) {
+        cin >> save[i];
+    }
 
-	sort(num2, num2 + a);
+    vector<int> temp = save;
 
-	for (i = 0; i < a; i++) {
-		if (i == 0) {
-			m.insert(pair<int, int>(num2[0], 0));
-		}
-		else if (num2[i - 1] < num2[i]) {
-			m.insert(pair<int, int>(num2[i], counter));
-			++counter;
-		}
-	}
+    sort(temp.begin(), temp.end());
 
-	for (i = 0; i < a; i++) {
-		c = m.find(num[i])->second;
-		cout << c << " ";
-	}
+    temp.erase(unique(temp.begin(), temp.end()), temp.end());
 
-	return 0;
+    for (int i = 0; i < N; i++) {
+        cout << lower_bound(temp.begin(), temp.end(), save[i]) - temp.begin() << ' ';
+    }
+
+    return 0;
 }
