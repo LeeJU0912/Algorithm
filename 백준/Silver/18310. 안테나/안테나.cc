@@ -3,13 +3,13 @@
 using namespace std;
 
 int N;
-vector<int> save;
-int hap[200000];
 
 int main() {
     FastIO
 
     cin >> N;
+
+    vector<int> save;
 
     for (int i = 0; i < N; i++) {
         int temp;
@@ -19,7 +19,7 @@ int main() {
 
     sort(save.begin(), save.end());
 
-    cout << save[(N - 1) / 2];
+    cout << save[((N + 1) / 2) - 1];
 
     return 0;
 }
