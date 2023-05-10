@@ -1,17 +1,12 @@
-a, b = map(int, input().split())
+H, M = map(int, input().split())
 
-c = int(a * 60 + b)
+M -= 45
 
-d = int(c % 60)
+if M < 0:
+    M = 60 + M
+    H -= 1
 
-e = int(c / 60)
+    if H < 0:
+        H = 24 + H
 
-f = int((c - 45) % 60)
-
-g = int((c - 45) / 60)
-
-if c < 45:
-    e = 23
-    print(e, f)
-else:
-    print(g, f)
+print(H, M)
