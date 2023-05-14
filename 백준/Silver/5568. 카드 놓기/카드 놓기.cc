@@ -4,9 +4,31 @@ using namespace std;
 
 set<string> s;
 vector<string> save;
+bool visited[10];
 
-int n;
-int k;
+int n, k;
+
+vector<string> tmp;
+
+void solve() {
+    if (tmp.size() == k) {
+        string temp;
+        for (int i = 0; i < tmp.size(); i++) {
+            temp += tmp[i];
+        }
+        s.insert(temp);
+        return;
+    }
+    for (int i = 0; i < n; i++) {
+        if (visited[i]) continue;
+
+        visited[i] = true;
+        tmp.push_back(save[i]);
+        solve();
+        tmp.pop_back();
+        visited[i] = false;
+    }
+}
 
 int main() {
     FastIO
@@ -19,15 +41,11 @@ int main() {
         save.push_back(temp);
     }
 
-    sort(save.begin(), save.end());
-
-    do {
-        string tmp;
-        for (int i = 0; i < k; i++) {
-            tmp += save[i];
-        }
-        s.insert(tmp);
-    } while (next_permutation(save.begin(), save.end()));
+    for (int i = 0; i < n; i++) {
+        visited[i] = true;
+        solve();
+        visited[i] = false;
+    }
 
     cout << s.size();
 
