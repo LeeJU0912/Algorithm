@@ -1,15 +1,14 @@
-a = int(input())
-b = int(input())
-c = int(input())
+A = int(input())
+B = int(input())
+C = int(input())
 
-d = a * b * c
+D = A * B * C
 
-e = list(0 for i in range(10))
+answer = [0 for i in range(10)]
 
-while d >= 1:
-    f = int(d % 10)
-    d = int(d / 10)
-    e[f] = e[f] + 1
+while D != 0:
+    answer[D % 10] += 1
+    D //= 10
 
-for x in range(10):
-    print(e[x])
+for i in answer:
+    print(i)
