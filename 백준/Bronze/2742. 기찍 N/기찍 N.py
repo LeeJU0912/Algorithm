@@ -1,7 +1,4 @@
-a = int(input())
+N = int(input())
 
-b = a
-
-for i in range(a):
-    print(b)
-    b = b - 1
+for i in range(N, 0, -1):
+    print(i)
