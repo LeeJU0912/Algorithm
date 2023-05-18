@@ -1,39 +1,21 @@
-#include <iostream>
-#include <cmath>
-#include <ctime>
-#include <algorithm>
-#include <stack>
-#include <queue>
-#include <deque>
-#include <string>
-#include <vector>
-#include <tuple>
-#include <functional>
-#include <map>
-#include <set>
-#include <cstring>
-
+#include <bits/stdc++.h>
+#define FastIO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 using namespace std;
 
+int n;
+
 int main() {
-	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+    FastIO
 
-	int a;
-	int b = 1;
-	int i;
-	int counter = 0;
+    cin >> n;
 
-	cin >> a;
-	for (i = 0; i < a; i++) {
-		if (b > 4200000) {
-			b %= 1000000;
-		}
-		b *= a - i;
-		while (b % 10 == 0) {
-			b /= 10;
-			counter += 1;
-		}
-	}
-	cout << counter;
-	return 0;
+    int ans = 0;
+
+    for (int i = 5; i <= n; i *= 5) {
+        ans += n / i;
+    }
+
+    cout << ans;
+
+    return 0;
 }

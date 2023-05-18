@@ -1,4 +1,4 @@
-# [Silver IV] 팩토리얼 0의 개수 - 1676 
+# [Silver V] 팩토리얼 0의 개수 - 1676 
 
 [문제 링크](https://www.acmicpc.net/problem/1676) 
 
@@ -8,7 +8,7 @@
 
 ### 분류
 
-임의 정밀도 / 큰 수 연산(arbitrary_precision), 수학(math)
+수학
 
 ### 문제 설명
 
