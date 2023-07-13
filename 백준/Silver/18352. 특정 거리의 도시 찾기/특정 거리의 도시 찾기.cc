@@ -4,35 +4,37 @@ using namespace std;
 
 int N, M, K, X;
 vector<int> graph[300001];
-bool visited[300001];
+int visited[300001];
 vector<int> ans;
 
 void bfs(int start) {
-    queue<pair<int, int>> q;
-    q.push({start, 0});
-    visited[start] = true;
+    queue<int> q;
+    q.push(start);
+    visited[start] = 0;
 
     while(!q.empty()) {
         auto now = q.front();
         q.pop();
 
-        if (now.second == K) {
-            ans.push_back(now.first);
+        if (visited[now] == K) {
+            ans.push_back(now);
             continue;
         }
 
-        for (int i = 0; i < graph[now.first].size(); i++) {
-            int next = graph[now.first][i];
+        for (int i = 0; i < graph[now].size(); i++) {
+            int next = graph[now][i];
 
-            if (visited[next]) continue;
-            visited[next] = true;
-            q.push({next, now.second + 1});
+            if (visited[next] != -1) continue;
+            visited[next] = visited[now] + 1;
+            q.push(next);
         }
     }
 }
 
 int main() {
     FastIO
+
+    memset(visited, -1, sizeof(visited));
 
     cin >> N >> M >> K >> X;
 
