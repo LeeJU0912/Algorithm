@@ -58,17 +58,19 @@ int main() {
             cin >> save[i];
         }
 
+        if (n > 32) {
+            cout << 0 << '\n';
+            continue;
+        }
+
         int ans = INT_MAX;
 
         for (int i = 0; i < n - 2; i++) {
             for (int j = i + 1; j < n - 1; j++) {
                 for (int k = j + 1; k < n; k++) {
                     ans = min(ans, DP[{save[i], save[j]}] + DP[{save[j], save[k]}] + DP[{save[i], save[k]}]);
-                    if (ans == 0) break;
                 }
-                if (ans == 0) break;
             }
-            if (ans == 0) break;
         }
 
         cout << ans << '\n';
