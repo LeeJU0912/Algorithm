@@ -1,30 +1,26 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
+#define FastIO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 using namespace std;
 
+string a, b;
 int DP[4001][4001];
 int ans;
 
 int main() {
-    ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
-
-    string a, b;
+    FastIO
 
     cin >> a >> b;
 
-    for (int i = 0; i < b.length(); i++) {
-        for (int j = 0; j < a.length(); j++) {
-            if (i == 0) {
-                if (b[i] == a[j]) {
-                    DP[i][j] = 1;
-                    ans = 1;
-                }
+    for (int i = 1; i <= a.length(); i++) {
+        for (int j = 1; j <= b.length(); j++) {
+            if (a[i - 1] == b[j - 1]) {
+                DP[i][j] = DP[i - 1][j - 1] + 1;
             }
             else {
-                if (b[i] == a[j]) {
-                    DP[i][j] += DP[i - 1][j - 1] + 1;
-                    ans = max(ans, DP[i][j]);
-                }
+                DP[i][j] = 0;
             }
+
+            ans = max(ans, DP[i][j]);
         }
     }
 
