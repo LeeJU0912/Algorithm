@@ -79,7 +79,7 @@ int main() {
     int ans = 0;
 
     ans += dist[city[0]];
-    
+
     for (int i = 1; i < m; i++) {
         ans += dist[city[i - 1]] + dist[city[i]] - 2 * dist[find_lca(city[i - 1], city[i])];
     }
