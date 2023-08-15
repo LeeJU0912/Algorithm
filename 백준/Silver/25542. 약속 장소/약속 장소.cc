@@ -5,8 +5,6 @@ using namespace std;
 int N, L;
 vector<string> save;
 
-
-
 int main() {
     FastIO
 
@@ -19,34 +17,32 @@ int main() {
         save.push_back(s);
     }
 
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < L; j++) {
-            for (int k = 0; k < 26; k++) {
-                string now = save[i];
-                now[j] = (char)('A' + k);
+    for (int j = 0; j < L; j++) {
+        for (int k = 0; k < 26; k++) {
+            string now = save[0];
+            now[j] = (char)('A' + k);
 
-                int chk = 0;
+            int chk = 0;
 
-                for (int l = 0; l < N; l++) {
-                    int counter = 0;
-                    for (int m = 0; m < L; m++) {
-                        if (now[m] != save[l][m]) {
-                            counter++;
-                        }
-                    }
-
-                    if (counter >= 2) {
-                        break;
-                    }
-                    else {
-                        chk++;
+            for (int l = 0; l < N; l++) {
+                int counter = 0;
+                for (int m = 0; m < L; m++) {
+                    if (now[m] != save[l][m]) {
+                        counter++;
                     }
                 }
 
-                if (chk == N) {
-                    cout << now;
-                    return 0;
+                if (counter >= 2) {
+                    break;
                 }
+                else {
+                    chk++;
+                }
+            }
+
+            if (chk == N) {
+                cout << now;
+                return 0;
             }
         }
     }
