@@ -2,61 +2,61 @@
 #define FastIO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 using namespace std;
 
-int N;
+int N, K;
 vector<pair<int, int>> graph[100001];
 int depth[100001];
-int lca[1000001][21][3];
-int K;
+int ancestor[100001][20][3];
 
-void dfs(int now, int parent) {
+void make_tree(int now, int before, int shortest, int longest) {
+    depth[now] = depth[before] + 1;
+    ancestor[now][0][0] = before;
+    ancestor[now][0][1] = shortest;
+    ancestor[now][0][2] = longest;
+
     for (int i = 0; i < graph[now].size(); i++) {
         auto next = graph[now][i];
-        if (next.second == parent) continue;
 
-        depth[next.second] = depth[now] + 1;
+        if (next.second == before) continue;
 
-        lca[next.second][0][0] = now;
-        lca[next.second][0][1] = lca[next.second][0][2] = next.first;
-
-        for (int j = 1; j < 21; j++) {
-            lca[next.second][j][0] = lca[lca[next.second][j - 1][0]][j - 1][0];
-            lca[next.second][j][1] = min(lca[lca[next.second][j - 1][0]][j - 1][1], lca[next.second][j - 1][1]);
-            lca[next.second][j][2] = max(lca[lca[next.second][j - 1][0]][j - 1][2], lca[next.second][j - 1][2]);
-        }
-
-        dfs(next.second, now);
+        make_tree(next.second, now, next.first, next.first);
     }
 }
 
-pair<int, int> find(int a, int b) {
-    pair<int, int> ans;
-    ans.first = INT_MAX;
-    ans.second = 0;
+pair<int, int> get_minmax(int a, int b) {
+    int mini = INT_MAX;
+    int maxi = 0;
 
     if (depth[a] > depth[b]) swap(a, b);
 
-    for (int i = 20; i >= 0; i--) {
-        if ((1 << i) <= depth[b] - depth[a]) {
-            ans.first = min(ans.first, lca[b][i][1]);
-            ans.second = max(ans.second, lca[b][i][2]);
-            b = lca[b][i][0];
+    for (int i = 19; i >= 0; i--) {
+        if (depth[a] <= depth[ancestor[b][i][0]]) {
+            mini = min(mini, ancestor[b][i][1]);
+            maxi = max(maxi, ancestor[b][i][2]);
+            b = ancestor[b][i][0];
         }
     }
 
     if (a != b) {
-        for (int i = 20; i >= 0; i--) {
-            if (lca[a][i][0] != lca[b][i][0]) {
-                ans.first = min(ans.first, min(lca[b][i][1], lca[a][i][1]));
-                ans.second = max(ans.second, max(lca[b][i][2], lca[a][i][2]));
-                a = lca[a][i][0];
-                b = lca[b][i][0];
+        for (int i = 19; i >= 0; i--) {
+            if (ancestor[a][i][0] != ancestor[b][i][0]) {
+                mini = min(mini, ancestor[a][i][1]);
+                maxi = max(maxi, ancestor[a][i][2]);
+
+                mini = min(mini, ancestor[b][i][1]);
+                maxi = max(maxi, ancestor[b][i][2]);
+
+                a = ancestor[a][i][0];
+                b = ancestor[b][i][0];
             }
         }
-        ans.first = min(ans.first, min(lca[b][0][1], lca[a][0][1]));
-        ans.second = max(ans.second, max(lca[b][0][2], lca[a][0][2]));
+        mini = min(mini, ancestor[a][0][1]);
+        maxi = max(maxi, ancestor[a][0][2]);
+
+        mini = min(mini, ancestor[b][0][1]);
+        maxi = max(maxi, ancestor[b][0][2]);
     }
 
-    return ans;
+    return {mini, maxi};
 }
 
 int main() {
@@ -67,19 +67,28 @@ int main() {
     for (int i = 0; i < N - 1; i++) {
         int a, b, c;
         cin >> a >> b >> c;
+
         graph[a].push_back({c, b});
         graph[b].push_back({c, a});
     }
 
-    dfs(1, 0);
+    make_tree(1, 0, INT_MAX, 0);
+    for (int i = 1; i < 20; i++) {
+        for (int j = 1; j <= N; j++) {
+            ancestor[j][i][0] = ancestor[ancestor[j][i - 1][0]][i - 1][0];
+            ancestor[j][i][1] = min(ancestor[ancestor[j][i - 1][0]][i - 1][1], ancestor[j][i - 1][1]);
+            ancestor[j][i][2] = max(ancestor[ancestor[j][i - 1][0]][i - 1][2], ancestor[j][i - 1][2]);
+        }
+    }
 
     cin >> K;
 
     for (int i = 0; i < K; i++) {
-        int d, e;
-        cin >> d >> e;
+        int a, b;
+        cin >> a >> b;
 
-        auto ans = find(d, e);
+        auto ans = get_minmax(a, b);
+
         cout << ans.first << ' ' << ans.second << '\n';
     }
 
