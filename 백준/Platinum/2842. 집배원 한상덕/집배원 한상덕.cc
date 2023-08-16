@@ -3,80 +3,95 @@
 using namespace std;
 
 int N;
-vector<string> save;
+char board[51][51];
+int depth[51][51];
 bool visited[51][51];
-int height_map[51][51];
+
+pair<int, int> start;
+vector<pair<int, int>> house;
 vector<int> height;
 
-int house_count;
+int limit_maxi;
+int limit_mini;
 
-pair<int, int> post;
+int ans = INT_MAX;
 
-int height_lowest;
-int height_highest;
+int dx[8] = {0, 1, 1, 1, 0, -1, - 1, -1};
+int dy[8] = {1, 1, 0, -1, -1, -1, 0, 1};
 
+void go() {
+    if (depth[start.first][start.second] < height[limit_mini] || depth[start.first][start.second] > height[limit_maxi]) return;
 
-int dx[8] = {1, 1, 1, 0, 0, -1, -1, -1};
-int dy[8] = {1, 0, -1, 1, -1, 1, 0, -1};
+    queue<pair<int, int>> q;
+    q.push(start);
 
-int solve(int x, int y) {
-	if (x < 0 || x >= N || y < 0 || y >= N) return 0;
-	if (height_map[x][y] < height[height_lowest] || height_map[x][y] > height[height_highest]) return 0;
-	if (visited[x][y]) return 0;
-	visited[x][y] = true;
-	
-	int counter = save[x][y] == 'K';
-	
-	for (int i = 0; i < 8; i++) {
-		counter += solve(x + dx[i], y + dy[i]);
-	}
-	return counter;
+    while(!q.empty()) {
+        auto now = q.front();
+        q.pop();
+
+        for (int i = 0; i < 8; i++) {
+            int next_x = now.first + dx[i];
+            int next_y = now.second + dy[i];
+
+            if (next_x < 0 || next_x >= N || next_y < 0 || next_y >= N) continue;
+            if (depth[next_x][next_y] > height[limit_maxi] || depth[next_x][next_y] < height[limit_mini]) continue;
+
+            if (visited[next_x][next_y]) continue;
+            visited[next_x][next_y] = true;
+
+            q.push({next_x, next_y});
+        }
+    }
 }
 
 int main() {
-	FastIO
-	
-	cin >> N;
-	
-	for (int i = 0; i < N; i++) {
-		string s;
-		cin >> s;
-		
-		save.push_back(s);
-		
-		for (int j = 0; j < N; j++) {
-			if (s[j] == 'P') {
-				post = {i, j};
-			}
-			else if (s[j] == 'K') {
-				house_count++;
-			}
-		}
-	}
-	
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++) {
-			cin >> height_map[i][j];
-			height.push_back(height_map[i][j]);
-		}
-	}
-	
-	sort(height.begin(), height.end());
-	height_lowest = 0;
-	height_highest = 0;
-	
-	int ans = INT_MAX;
-	
-	while (height_lowest < height.size() && height_highest < height.size()) {
-		memset(visited, false, sizeof(visited));
-		if (solve(post.first, post.second) == house_count) {
-			ans = min(ans, height[height_highest] - height[height_lowest]);
-			height_lowest++;
-		}
-		else height_highest++;
-	}
-	
-	cout << ans;
-	
-	return 0;
+    FastIO
+
+    cin >> N;
+
+    for (int i = 0; i < N; i++) {
+        string s;
+        cin >> s;
+
+        for (int j = 0; j < N; j++) {
+            board[i][j] = s[j];
+            if (board[i][j] == 'P') {
+                start.first = i;
+                start.second = j;
+            }
+            else if (board[i][j] == 'K') {
+                house.push_back({i, j});
+            }
+        }
+    }
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            cin >> depth[i][j];
+            height.push_back(depth[i][j]);
+        }
+    }
+
+    sort(height.begin(), height.end());
+
+    while(limit_maxi < height.size() && limit_mini < height.size()) {
+        memset(visited, false, sizeof(visited));
+
+        go();
+
+        int house_chk = 0;
+        for (int i = 0; i < house.size(); i++) {
+            if (visited[house[i].first][house[i].second]) house_chk++;
+        }
+
+        if (house_chk == house.size()) {
+            ans = min(ans, height[limit_maxi] - height[limit_mini]);
+            limit_mini++;
+        }
+        else limit_maxi++;
+    }
+    
+    cout << ans;
+
+    return 0;
 }
