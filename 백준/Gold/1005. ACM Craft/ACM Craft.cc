@@ -1,81 +1,83 @@
-#include <iostream>
-#include <cmath>
-#include <ctime>
-#include <algorithm>
-#include <stack>
-#include <queue>
-#include <deque>
-#include <string>
-#include <vector>
-#include <tuple>
-#include <functional>
-#include <map>
-#include <set>
-#include <cstring>
-#include <array>
-#include <climits>
-#include <cstdlib>
-#include <utility>
-#include <regex>
-#include <numeric>
-#include <cctype>
-
+#include<bits/stdc++.h>
+#define FastIO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 using namespace std;
 
-int Test;
-int Building, Road;
-int Time[1001];
-int X, Y;
-int dp[1001];
-
-int Win;
-vector<int> go[1001];
+int N, K;
+int const_time[1001];
+int W;
+int DP[1001];
 int indegree[1001];
+vector<int> graph[1001];
+vector<int> start_q;
 
 void solve() {
     queue<int> q;
-    for (int i = 1; i <= Building; i++) {
-        if (indegree[i] == 0) {
-            q.push(i);
-            dp[i] = Time[i];
-        }
+
+    for (int i : start_q) {
+        q.push(i);
+        DP[i] = const_time[i];
     }
+
     while(!q.empty()) {
         int now = q.front();
         q.pop();
-        for (int i = 0; i < go[now].size(); i++) {
-            int next = go[now][i];
-            dp[next] = max(dp[next], dp[now] + Time[next]);
-            if (--indegree[next] == 0) {
+
+        for (int i = 0; i < graph[now].size(); i++) {
+            int next = graph[now][i];
+
+            DP[next] = max(DP[next], DP[now] + const_time[next]);
+
+            indegree[next]--;
+
+
+            if (indegree[next]) {
+                continue;
+            }
+            else {
                 q.push(next);
             }
         }
     }
-    cout << dp[Win] << '\n';
 }
 
 int main() {
-    ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
+    FastIO
 
-    cin >> Test;
+    int T;
+    cin >> T;
 
-    while(Test--) {
-        cin >> Building >> Road;
-        for (int i = 1; i <= Building; i++) {
-            cin >> Time[i];
+    while(T--) {
+        cin >> N >> K;
+
+        start_q.clear();
+        memset(DP, 0, sizeof(DP));
+        for (int i = 1; i <= N; i++) {
+            graph[i].clear();
         }
-        for (int i = 1; i <= Road; i++) {
-            cin >> X >> Y;
-            go[X].push_back(Y);
-            indegree[Y]++;
+
+        for (int i = 1; i <= N; i++) {
+            cin >> const_time[i];
         }
-        cin >> Win;
+
+        for (int i = 0; i < K; i++) {
+            int x, y;
+            cin >> x >> y;
+
+            graph[x].push_back(y);
+            indegree[y]++;
+        }
+
+        cin >> W;
+
+        for (int i = 1; i <= N; i++) {
+            if (!indegree[i]) {
+                start_q.push_back(i);
+            }
+        }
+
         solve();
 
-        memset(indegree, 0, sizeof(indegree));
-        memset(go, 0, sizeof(go));
-        memset(Time, 0, sizeof(Time));
-        memset(dp, 0, sizeof(dp));
+        cout << DP[W] << '\n';
     }
 
     return 0;
