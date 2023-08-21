@@ -1,57 +1,49 @@
-#include <iostream>
-#include <cmath>
-#include <ctime>
-#include <algorithm>
-#include <stack>
-#include <queue>
-#include <deque>
-#include <string>
-#include <vector>
-#include <tuple>
-#include <functional>
-#include <map>
-#include <set>
-#include <cstring>
-#include <array>
-#include <climits>
-
+#include<bits/stdc++.h>
+#define FastIO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 using namespace std;
 
 int N, M;
-int sum;
-int memory[101];
-int cost[101];
-int cache[101][10001];
-int ans = INT_MAX;
+vector<int> memo;
+vector<int> costs;
+int DP[101][10001];
 
 int main() {
-    ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-
-    cin >> N >> M;
-
-    for (int i = 1; i <= N; i++) {
-        cin >> memory[i];
-    }
-
-    for (int i = 1; i <= N; i++) {
-        cin >> cost[i];
-        sum += cost[i];
-    }
-
-    for (int i = 1; i <= N; i++) {
-        for (int j = 0; j <= sum; j++) {
-            if (j - cost[i] >= 0) {
-                cache[i][j] = max(cache[i][j], cache[i - 1][j - cost[i]] + memory[i]);
-            }
-            cache[i][j] = max(cache[i][j], cache[i - 1][j]);
-
-            if (cache[i][j] >= M) {
-                ans = min(ans, j);
-            }
-        }
-    }
-
-    cout << ans;
-
-    return 0;
+	FastIO
+	
+	cin >> N >> M;
+	
+	for (int i = 0; i < N; i++) {
+		int temp;
+		cin >> temp;
+		memo.push_back(temp);
+	}
+	
+	for (int i = 0; i < N; i++) {
+		int temp;
+		cin >> temp;
+		costs.push_back(temp);
+	}
+	
+	for (int i = 1; i <= N; i++) {
+		for (int j = 1; j <= 10000; j++) {
+			int now_mem = memo[i - 1];
+			int now_cost = costs[i - 1];
+			
+			if (now_cost <= j) {
+				DP[i][j] = max(DP[i - 1][j - now_cost] + now_mem, DP[i - 1][j]);
+			}
+			else {
+				DP[i][j] = DP[i - 1][j];
+			}
+		}
+	}
+	
+	for (int i = 0; i <= 10000; i++) {
+		if (DP[N][i] >= M) {
+			cout << i;
+			break;
+		}
+	}
+	
+	return 0;
 }
