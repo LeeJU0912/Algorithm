@@ -13,12 +13,12 @@ int dy[4] = {1, -1, 0, 0};
 int ans = INT_MAX;
 
 void solve() {
-    priority_queue<pair<pair<int, int>, pair<int, int>>, vector<pair<pair<int, int>, pair<int, int>>>, greater<>> q;
+    queue<pair<pair<int, int>, pair<int, int>>> q;
     q.push({{0, 0}, {0, 0}});
     visited[0][0][0] = 0;
 
     while(!q.empty()) {
-        auto now = q.top();
+        auto now = q.front();
         q.pop();
 
         if (now.second.first == H - 1 && now.second.second == W - 1) {
