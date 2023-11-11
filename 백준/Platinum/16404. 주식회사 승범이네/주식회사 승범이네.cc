@@ -47,13 +47,13 @@ void update(int node, int left, int right, int start, int end, int val) {
     tree[node] = tree[node * 2] + tree[node * 2 + 1];
 }
 
-int query(int node, int left, int right, int start, int end) {
+int query(int node, int left, int right, int target) {
     update_lazy(node, left, right);
-    if (right < start || end < left) return 0;
-    if (start <= left && right <= end) return tree[node];
+    if (right < target || target < left) return 0;
+    if (left == right) return tree[node];
 
-    int l = query(node * 2, left, (left + right) / 2, start, end);
-    int r = query(node * 2 + 1, (left + right) / 2 + 1, right, start, end);
+    int l = query(node * 2, left, (left + right) / 2, target);
+    int r = query(node * 2 + 1, (left + right) / 2 + 1, right, target);
 
     return l + r;
 }
@@ -90,7 +90,7 @@ int main() {
         else if (order == 2) {
             int a;
             cin >> a;
-            cout << query(1, 1, N, save[a].first, save[a].first) << '\n';
+            cout << query(1, 1, N, save[a].first) << '\n';
         }
     }
 
