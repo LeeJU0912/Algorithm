@@ -3,7 +3,8 @@
 using namespace std;
 
 int N, M;
-double len[201][201];
+int S[20001], E[20001];
+double L[20001];
 double dist[201][201];
 
 double ans = DBL_MAX;
@@ -11,16 +12,8 @@ double ans = DBL_MAX;
 void solve(int start) {
     double tmp = 0;
 
-    for (int from = 1; from <= N; from++) {
-        for (int to = 1; to <= N; to++) {
-            if (len[from][to] == -1) continue;
-
-            double remain = len[from][to] - (dist[start][to] - dist[start][from]);
-
-            if (remain <= 0) continue;
-
-            tmp = max(tmp, dist[start][to] + remain / 2);
-        }
+    for (int i = 0; i < M; i++) {
+        tmp = max(tmp, dist[start][S[i]] + dist[start][E[i]] + L[i]);
     }
 
     ans = min(ans, tmp);
@@ -33,21 +26,16 @@ int main() {
 
     for (int i = 1; i <= N; i++) {
         for (int j = 1; j <= N; j++) {
-            len[i][j] = -1;
-
             if (i == j) dist[i][j] = 0;
             else dist[i][j] = 20001;
         }
     }
 
     for (int i = 0; i < M; i++) {
-        int S, E;
-        double L;
-        cin >> S >> E >> L;
-        len[S][E] = max(len[S][E], L);
-        len[E][S] = max(len[E][S], L);
-        dist[S][E] = min(dist[S][E], L);
-        dist[E][S] = min(dist[E][S], L);
+        cin >> S[i] >> E[i] >> L[i];
+
+        dist[S[i]][E[i]] = min(dist[S[i]][E[i]], L[i]);
+        dist[E[i]][S[i]] = min(dist[E[i]][S[i]], L[i]);
     }
 
     for (int k = 1; k <= N; k++) {
@@ -64,7 +52,7 @@ int main() {
 
     cout << fixed;
     cout.precision(1);
-    cout << ans;
+    cout << ans / 2;
 
     return 0;
 }
