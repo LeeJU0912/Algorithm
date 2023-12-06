@@ -4,35 +4,37 @@ using namespace std;
 
 int N;
 
-bool sosu[1234322];
+bool sosu[1003002];
 
-vector<string> sosu_list;
+vector<int> sosu_list;
 
 int main() {
     FastIO
 
-    for (int i = 2; i <= sqrt(1234321); i++) {
+    for (int i = 2; i <= sqrt(1003001); i++) {
         if (sosu[i]) continue;
-        for (int j = 2; i * j <= 1234321; j++) {
+        for (int j = 2; i * j <= 1003001; j++) {
             sosu[i * j] = true;
         }
     }
 
-    for (int i = 2; i <= 1234321; i++) {
+    for (int i = 2; i <= 1003001; i++) {
         if (!sosu[i]) {
-            sosu_list.push_back(to_string(i));
+            sosu_list.push_back(i);
         }
     }
 
     cin >> N;
     for (int i = 0; i < sosu_list.size(); i++) {
-        if (stoi(sosu_list[i]) >= N) {
+        if (sosu_list[i] >= N) {
             int counter = 0;
-            for (int j = 0; j < sosu_list[i].size() / 2; j++) {
-                if (sosu_list[i][j] == sosu_list[i][sosu_list[i].size() - 1 - j]) counter++;
+
+            string s_sosu = to_string(sosu_list[i]);
+            for (int j = 0; j < s_sosu.size() / 2; j++) {
+                if (s_sosu[j] == s_sosu[s_sosu.size() - 1 - j]) counter++;
             }
-            
-            if (counter == sosu_list[i].size() / 2) {
+
+            if (counter == s_sosu.size() / 2) {
                 cout << sosu_list[i];
                 return 0;
             }
