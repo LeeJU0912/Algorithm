@@ -5,9 +5,8 @@ using namespace std;
 int N, d, k ,c;
 
 int sushi[3000001];
+int counter[3001];
 int ans;
-
-unordered_map<int, int> event;
 
 int main() {
     FastIO
@@ -18,22 +17,36 @@ int main() {
         cin >> sushi[i];
     }
 
+    int kind = 0;
     for (int i = 0; i < k; i++) {
-        event[sushi[i]]++;
+        if (counter[sushi[i]]) {
+            counter[sushi[i]]++;
+            continue;
+        }
+        counter[sushi[i]]++;
+        kind++;
     }
 
     for (int i = 0; i < N; i++) {
-        if (event.find(c) == event.end()) {
-            ans = max(ans, (int)(event.size() + 1));
+        if (counter[c] == 0) {
+            ans = max(ans, kind + 1);
         }
         else {
-            ans = max(ans, (int)event.size());
+            ans = max(ans, kind);
         }
 
-        event[sushi[i]]--;
-        event[sushi[(i + k) % N]]++;
+        counter[sushi[i]]--;
 
-        if (event[sushi[i]] == 0) event.erase(sushi[i]);
+        if (counter[sushi[i]] == 0) {
+            kind--;
+        }
+
+        if (counter[sushi[(i + k) % N]] == 0) {
+            kind++;
+        }
+
+        counter[sushi[(i + k) % N]]++;
+
     }
 
     cout << ans;
