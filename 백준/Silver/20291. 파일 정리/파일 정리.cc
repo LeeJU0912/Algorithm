@@ -14,19 +14,12 @@ int main() {
         string s;
         cin >> s;
 
-        bool chk = false;
-        string ans;
         for (int j = 0; j < s.size(); j++) {
-            if (chk) {
-                ans += s[j];
-            }
-            if (s[j] == '.') chk = true;
+            if (s[j] == '.') mp[s.substr(j + 1)]++;
         }
-
-        mp[ans]++;
     }
 
-    for (auto i : mp) {
+    for (const auto& i : mp) {
         cout << i.first << ' ' << i.second << '\n';
     }
 
