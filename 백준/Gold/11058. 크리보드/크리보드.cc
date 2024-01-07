@@ -18,8 +18,8 @@ void solve() {
     for (int i = 7; i <= N; i++) {
         long long maxi = LLONG_MIN;
 
-        for (int j = 1; j <= i - 3; j++) {
-            maxi = max(maxi, DP[i - (j + 2)] * (j + 1));
+        for (int j = i - 3; j >= 3; j--) {
+            maxi = max(maxi, DP[j] * (i - j - 1));
         }
 
         DP[i] = max(DP[i - 1] + 1, maxi);
