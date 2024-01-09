@@ -1,61 +1,35 @@
-#include <iostream>
-#include <cmath>
-#include <ctime>
-#include <algorithm>
-#include <stack>
-#include <queue>
-#include <deque>
-#include <string>
-#include <vector>
-#include <tuple>
-#include <functional>
-#include <map>
-#include <set>
-#include <cstring>
-#include <array>
-
+#include <bits/stdc++.h>
+#define FastIO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 using namespace std;
 
-int num_list[2][100000];
-int maxi[2][100000];
-
-int a, b;
+int score[2][100001];
+int DP[2][100001];
 
 int main() {
-	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+    FastIO
 
-	int i, g;
+    int T;
+    cin >> T;
 
-	cin >> a;
-	
+    while(T--) {
+        int n;
+        cin >> n;
 
-	for (i = 0; i < a; i++) {
-		cin >> b;
-		for (g = 0; g < b; g++) {
-			cin >> num_list[0][g];
-		}
-		for (g = 0; g < b; g++) {
-			cin >> num_list[1][g];
-		}
-		for (int x = b - 1; x >= 0; x--) {
-			for (int y = 0; y < 2; y++) {
-				if (maxi[y][x]) continue;
-				if (x == b - 1) {
-					maxi[y][x] = num_list[y][x];
-				}
-				if (y == 0) {
-					maxi[y][x] = max(maxi[y + 1][x + 1], maxi[y + 1][x + 2]) + num_list[y][x];
-				}
-				else {
-					maxi[y][x] = max(maxi[y - 1][x + 1], maxi[y - 1][x + 2]) + num_list[y][x];
-				}
-				
-			}
-		}
-		cout << max(maxi[0][0], maxi[1][0]) << '\n';
-		memset(num_list, 0, sizeof(num_list));
-		memset(maxi, 0, sizeof(maxi));
-	}
+        for (int j = 0; j < 2; j++) {
+            for (int i = 1; i <= n; i++) {
+                cin >> score[j][i];
+            }
+        }
 
-	return 0;
+        DP[0][1] = score[0][1];
+        DP[1][1] = score[1][1];
+        for (int i = 2; i <= n; i++) {
+            DP[0][i] = max(DP[0][i - 2], max(DP[1][i - 2], DP[1][i - 1])) + score[0][i];
+            DP[1][i] = max(DP[1][i - 2], max(DP[0][i - 2], DP[0][i - 1])) + score[1][i];
+        }
+
+        cout << max(DP[0][n], DP[1][n]) << '\n';
+    }
+
+    return 0;
 }
