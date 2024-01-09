@@ -22,7 +22,11 @@ bool dfs(int A) {
 
             return true;
         }
+    }
 
+    for (int i = 0; i < graph[A].size(); i++) {
+        int B = graph[A][i];
+        
         if (dfs(matching[B])) {
             matching[B] = A;
 
