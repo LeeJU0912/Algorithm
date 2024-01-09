@@ -47,8 +47,7 @@ int main() {
     for (int i = 0; i < N - 1; i++) {
         for (int j = i + 1; j < N; j++) {
             int val = comp(i, j);
-            if (val == 2) graph[j].push_back(i);
-            else if (val == 1) graph[i].push_back(j);
+            if (val > 0) graph[i].push_back(j);
             else if (val == 0) graph[j].push_back(i);
         }
     }
