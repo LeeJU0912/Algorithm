@@ -28,18 +28,17 @@ int main() {
         pigs.push_back({a, b});
     }
 
-    sort(pigs.begin(), pigs.end());
-
     for (int i = 0; i < N; i++) {
         if (L < pigs[i].second) continue;
         int mini = max(0, pigs[i].first - (L - pigs[i].second));
         int maxi = min(1000000001, pigs[i].first + (L - pigs[i].second));
-        
+
         int sch = lower_bound(shot.begin(), shot.end(), mini) - shot.begin();
+        if (sch == M) continue;
         if (shot[sch] <= maxi) ans++;
     }
-    
+
     cout << ans;
-    
+
     return 0;
 }
