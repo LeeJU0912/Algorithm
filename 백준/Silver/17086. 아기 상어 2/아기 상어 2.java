@@ -11,20 +11,17 @@ public class Main {
     static int[] dx = {1, -1, -1, 1, -1, 1, 0, 0};
     static int[] dy = {1, -1, 1, -1, 0, 0, 1, -1};
 
-    static int ans = 0;
+    static Queue<Point> q = new LinkedList<>();
 
-    static int bfs(int x, int y) {
-        Queue<Point> q = new LinkedList<Point>();
-        q.add(new Point(x, y));
+    static int bfs() {
+        int ans = 0;
 
         while(!q.isEmpty()) {
             int now_x = q.peek().x;
             int now_y = q.peek().y;
             q.poll();
 
-            if (board[now_x][now_y] == 1) {
-                return DP[now_x][now_y];
-            }
+            ans = Math.max(ans, DP[now_x][now_y]);
 
             for (int i = 0; i < 8; i++) {
                 int next_x = now_x + dx[i];
@@ -39,7 +36,7 @@ public class Main {
             }
         }
 
-        return 0;
+        return ans;
     }
 
     public static void main(String[] args) throws IOException {
@@ -51,28 +48,19 @@ public class Main {
         N = Integer.parseInt(stringTokenizer.nextToken());
         M = Integer.parseInt(stringTokenizer.nextToken());
 
-
-
         for (int i = 0; i < N; i++) {
             stringTokenizer = new StringTokenizer(br.readLine());
 
             for (int j = 0; j < M; j++) {
                 board[i][j] = Integer.parseInt(stringTokenizer.nextToken());
-            }
-        }
-
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                if (board[i][j] == 1) continue;
-                for (int k = 0; k < N; k++) {
-                    Arrays.fill(visited[k], false);
-                    Arrays.fill(DP[k], 0);
+                if (board[i][j] == 1) {
+                    q.add(new Point(i, j));
+                    visited[i][j] = true;
                 }
-                ans = Math.max(ans, bfs(i, j));
             }
         }
 
-        bw.write(String.valueOf(ans));
+        bw.write(String.valueOf(bfs()));
 
         bw.flush();
     }
