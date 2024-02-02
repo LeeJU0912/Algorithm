@@ -1,4 +1,4 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 #define FastIO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 using namespace std;
 
@@ -10,97 +10,87 @@ struct Node {
 };
 
 Node merge(Node a, Node b) {
-    Node X;
-    X.all_sum = a.all_sum + b.all_sum;
-    X.left_sum = max(a.left_sum, a.all_sum + b.left_sum);
-    X.right_sum = max(b.right_sum, b.all_sum + a.right_sum);
-    X.max_sum = max(max(a.max_sum, b.max_sum), a.right_sum + b.left_sum);
+    Node c;
+    c.all_sum = a.all_sum + b.all_sum;
+    c.left_sum = max(a.left_sum, a.all_sum + b.left_sum);
+    c.right_sum = max(b.right_sum, a.right_sum + b.all_sum);
+    c.max_sum = max({c.all_sum, a.right_sum + b.left_sum, a.max_sum, b.max_sum});
 
-    return X;
+    return c;
 }
 
 int N;
-vector<pair<pair<int, int>, long long>> save;
-
-long long compressed[3001][3001];
+vector<pair<pair<int, int>, int>> save;
+set<int> X, Y;
+map<int, int> conv_x, conv_y;
 
 vector<Node> tree;
 
-set<int> X, Y;
-map<int, int> CX, CY;
+bool comp(pair<pair<int, int>, int> &a, pair<pair<int, int>, int> &b) {
+    return a.first.second < b.first.second;
+}
 
-int up, down;
-
-void update(int node, int left, int right) {
+void update(int node, int left, int right, int target, int val) {
+    if (right < target || left > target) return;
     if (left == right) {
-        tree[node] = {compressed[left][up] - compressed[left][down - 1], compressed[left][up] - compressed[left][down - 1], compressed[left][up] - compressed[left][down - 1], compressed[left][up] - compressed[left][down - 1]};
+        tree[node].all_sum += val;
+        tree[node].left_sum += val;
+        tree[node].right_sum += val;
+        tree[node].max_sum += val;
         return;
     }
 
-    update(node * 2, left, (left + right) / 2);
-    update(node * 2 + 1, (left + right) / 2 + 1, right);
+    update(node * 2, left, (left + right) / 2, target, val);
+    update(node * 2 + 1, (left + right) / 2 + 1, right, target, val);
 
     tree[node] = merge(tree[node * 2], tree[node * 2 + 1]);
-}
-
-Node query(int node, int left, int right, int start, int end) {
-    if (start > right || left > end) return {-(1 << 16), -(1 << 16), -(1 << 16), -(1 << 16)};
-    if (left <= start || end <= right) return tree[node];
-
-    Node L = query(node * 2, left, (left + right) / 2, start, end);
-    Node R = query(node * 2 + 1, (left + right) / 2 + 1, right, start, end);
-
-    return merge(L, R);
 }
 
 int main() {
     FastIO
 
     cin >> N;
+
     int tree_depth = (int)ceil(log2(N));
     int tree_size = (1 << (tree_depth + 1));
-    tree = vector<Node>(tree_size);
 
     for (int i = 0; i < N; i++) {
         int x, y, w;
         cin >> x >> y >> w;
+
         save.push_back({{x, y}, w});
         X.insert(x);
         Y.insert(y);
     }
 
     int counter = 1;
-    for (int z : X) {
-        CX[z] = counter++;
+    for (int x : X) {
+        conv_x[x] = counter++;
     }
 
     counter = 1;
-    for (int z : Y) {
-        CY[z] = counter++;
+    for (int y : Y) {
+        conv_y[y] = counter++;
     }
-
-    int a = X.size();
-    int b = Y.size();
 
     for (int i = 0; i < N; i++) {
-        compressed[CX[save[i].first.first]][CY[save[i].first.second]] = save[i].second;
+        save[i].first.first = conv_x[save[i].first.first];
+        save[i].first.second = conv_y[save[i].first.second];
     }
 
-    for (int i = 2; i <= b; i++) {
-        for (int j = 1; j <= a; j++) {
-            compressed[j][i] += compressed[j][i - 1];
-        }
-    }
+    sort(save.begin(), save.end(), comp);
 
-    long long ans = LLONG_MIN;
-
-    // y의 범위 설정
-    for (down = 1; down <= b; down++) {
+    long long ans = 0;
+    for (int y = 1; y <= Y.size(); y++) {
         tree = vector<Node>(tree_size);
-        for (up = down; up <= b; up++) {
-            update(1, 1, N);
-            // x축을 따라 전체 구간에서 가장 최댓값 구하기
-            ans = max(ans, query(1, 1, a, 1, a).max_sum);
+
+        for (int j = 0; j < N; j++) {
+            if (save[j].first.second < y) continue;
+            update(1, 1, N, save[j].first.first, save[j].second);
+
+            if (j == N - 1 || save[j].first.second != save[j + 1].first.second) {
+                ans = max(ans, tree[1].max_sum);
+            }
         }
     }
 
