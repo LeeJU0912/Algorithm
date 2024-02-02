@@ -20,9 +20,9 @@ Node merge(Node a, Node b) {
 }
 
 int N;
-vector<pair<pair<int, int>, int>> save;
+vector<pair<pair<int, int>, long long>> save;
 
-int compressed[3001][3001];
+long long compressed[3001][3001];
 
 vector<Node> tree;
 
@@ -79,15 +79,15 @@ int main() {
         CY[z] = counter++;
     }
 
-    for (int i = 0; i < N; i++) {
-        save[i].first.first = CX[save[i].first.first];
-        save[i].first.second = CY[save[i].first.second];
+    int a = X.size();
+    int b = Y.size();
 
-        compressed[save[i].first.first][save[i].first.second] = save[i].second;
+    for (int i = 0; i < N; i++) {
+        compressed[CX[save[i].first.first]][CY[save[i].first.second]] = save[i].second;
     }
 
-    for (int i = 2; i <= N; i++) {
-        for (int j = 1; j <= N; j++) {
+    for (int i = 2; i <= b; i++) {
+        for (int j = 1; j <= a; j++) {
             compressed[j][i] += compressed[j][i - 1];
         }
     }
@@ -95,12 +95,12 @@ int main() {
     long long ans = LLONG_MIN;
 
     // y의 범위 설정
-    for (down = 1; down <= N; down++) {
+    for (down = 1; down <= b; down++) {
         tree = vector<Node>(tree_size);
-        for (up = down; up <= N; up++) {
+        for (up = down; up <= b; up++) {
             update(1, 1, N);
             // x축을 따라 전체 구간에서 가장 최댓값 구하기
-            ans = max(ans, query(1, 1, N, 1, N).max_sum);
+            ans = max(ans, query(1, 1, a, 1, a).max_sum);
         }
     }
 
