@@ -5,6 +5,7 @@ using namespace std;
 int N;
 int A[2001];
 int B[2001];
+int DP[2001][2001];
 
 int ans;
 
@@ -17,6 +18,9 @@ void solve() {
         int now_left = q.front().second.first;
         int now_right = q.front().second.second;
         q.pop();
+
+        if (DP[now_left][now_right] >= now_counter) continue;
+        DP[now_left][now_right] = now_counter;
 
         ans = max(ans, now_counter);
         if (now_left == N + 1 || now_right == N + 1) continue;
@@ -38,6 +42,12 @@ int main() {
     }
     for (int i = 1; i <= N; i++) {
         cin >> B[i];
+    }
+
+    for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= N; j++) {
+            DP[i][j] = -1;
+        }
     }
 
     solve();
