@@ -6,19 +6,22 @@ int N, L, R;
 int board[51][51];
 bool visited[51][51];
 
-int dx[4] = {1, -1, 0, 0};
-int dy[4] = {0, 0, 1, -1};
+int dx[4] = {1, 0, -1, 0};
+int dy[4] = {0, 1, 0, -1};
 
 int ans;
 
 bool chk() {
     for (int i = 1; i <= N; i++) {
         for (int j = 1; j <= N; j++) {
-            for (int k = 0; k < 4; k++) {
+            for (int k = 0; k < 2; k++) {
                 int next_x = i + dx[k];
                 int next_y = j + dy[k];
+
                 if (next_x <= 0 || next_x > N || next_y <= 0 || next_y > N) continue;
-                if (abs(board[i][j] - board[next_x][next_y]) >= L && abs(board[i][j] - board[next_x][next_y]) <= R) return true;
+
+                int gap = abs(board[i][j] - board[next_x][next_y]);
+                if (gap >= L && gap <= R) return true;
             }
         }
     }
@@ -43,11 +46,14 @@ void move(int x, int y) {
             int next_x = now_x + dx[i];
             int next_y = now_y + dy[i];
 
-            if (next_x <= 0 || next_x > N || next_y <= 0 || next_y > N) continue;
-            if (abs(board[next_x][next_y] - board[now_x][now_y]) < L || abs(board[next_x][next_y] - board[now_x][now_y]) > R) continue;
-            if (visited[next_x][next_y]) continue;
-            visited[next_x][next_y] = true;
 
+            if (next_x <= 0 || next_x > N || next_y <= 0 || next_y > N) continue;
+            if (visited[next_x][next_y]) continue;
+
+            int gap = abs(board[next_x][next_y] - board[now_x][now_y]);
+            if (gap < L || gap > R) continue;
+
+            visited[next_x][next_y] = true;
             hap += board[next_x][next_y];
             q.push({next_x, next_y});
         }
