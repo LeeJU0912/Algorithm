@@ -9,24 +9,8 @@ bool visited[51][51];
 int dx[4] = {1, 0, -1, 0};
 int dy[4] = {0, 1, 0, -1};
 
+bool moved;
 int ans;
-
-bool chk() {
-    for (int i = 1; i <= N; i++) {
-        for (int j = 1; j <= N; j++) {
-            for (int k = 0; k < 2; k++) {
-                int next_x = i + dx[k];
-                int next_y = j + dy[k];
-
-                if (next_x <= 0 || next_x > N || next_y <= 0 || next_y > N) continue;
-
-                int gap = abs(board[i][j] - board[next_x][next_y]);
-                if (gap >= L && gap <= R) return true;
-            }
-        }
-    }
-    return false;
-}
 
 void move(int x, int y) {
     int hap = board[x][y];
@@ -59,15 +43,17 @@ void move(int x, int y) {
         }
     }
 
-    if (!save.empty()) {
-        hap /= save.size();
+    hap /= save.size();
 
-        for (int i = 0; i < save.size(); i++) {
-            int now_x = save[i].first;
-            int now_y = save[i].second;
+    for (int i = 0; i < save.size(); i++) {
+        int now_x = save[i].first;
+        int now_y = save[i].second;
 
-            board[now_x][now_y] = hap;
-        }
+        board[now_x][now_y] = hap;
+    }
+
+    if (save.size() > 1) {
+        moved = true;
     }
 }
 
@@ -81,8 +67,9 @@ int main() {
         }
     }
 
-    while(chk()) {
+    while(true) {
         memset(visited, false, sizeof(visited));
+        moved = false;
 
         for (int i = 1; i <= N; i++) {
             for (int j = 1; j <= N; j++) {
@@ -91,6 +78,8 @@ int main() {
                 move(i, j);
             }
         }
+
+        if (!moved) break;
 
         ans++;
     }
