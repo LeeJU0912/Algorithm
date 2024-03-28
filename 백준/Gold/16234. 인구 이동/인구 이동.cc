@@ -5,12 +5,33 @@ using namespace std;
 int N, L, R;
 int board[51][51];
 bool visited[51][51];
+bool connected[51][51];
 
 int dx[4] = {1, 0, -1, 0};
 int dy[4] = {0, 1, 0, -1};
 
 bool moved;
 int ans;
+
+void connect() {
+    for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= N; j++) {
+            for (int k = 0; k < 4; k++) {
+                int next_x = i + dx[k];
+                int next_y = j + dy[k];
+
+                if (next_x <= 0 || next_x > N || next_y <= 0 || next_y > N) continue;
+
+                int gap = abs(board[next_x][next_y] - board[i][j]);
+                if (gap < L || gap > R) continue;
+
+                connected[i][j] = true;
+                connected[next_x][next_y] = true;
+                moved = true;
+            }
+        }
+    }
+}
 
 void move(int x, int y) {
     int hap = board[x][y];
@@ -32,7 +53,7 @@ void move(int x, int y) {
 
 
             if (next_x <= 0 || next_x > N || next_y <= 0 || next_y > N) continue;
-            if (visited[next_x][next_y]) continue;
+            if (!connected[next_x][next_y] || visited[next_x][next_y]) continue;
 
             int gap = abs(board[next_x][next_y] - board[now_x][now_y]);
             if (gap < L || gap > R) continue;
@@ -51,10 +72,6 @@ void move(int x, int y) {
 
         board[now_x][now_y] = hap;
     }
-
-    if (save.size() > 1) {
-        moved = true;
-    }
 }
 
 int main() {
@@ -69,11 +86,15 @@ int main() {
 
     while(true) {
         memset(visited, false, sizeof(visited));
+        memset(connected, false, sizeof(connected));
+
         moved = false;
+
+        connect();
 
         for (int i = 1; i <= N; i++) {
             for (int j = 1; j <= N; j++) {
-                if (visited[i][j]) continue;
+                if (!connected[i][j] || visited[i][j]) continue;
                 if (board[i][j] == 0) continue;
                 move(i, j);
             }
