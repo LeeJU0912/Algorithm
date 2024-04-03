@@ -49,10 +49,6 @@ public class Main {
 
         Collections.sort(saved);
 
-//        for (int i = 0; i < saved.size(); i++) {
-//            System.out.println(saved.get(i).deadline + " " + saved.get(i).ramen);
-//        }
-
         int now_time = saved.get(saved.size() - 1).deadline;
 
         saving(saved.size() - 1);
@@ -63,17 +59,13 @@ public class Main {
             if (saved.get(i).deadline < now_time) {
                 now_time = saved.get(i).deadline;
 
-
                 while(counter > now_time) {
                     if (pq.isEmpty()) break;
-                    //System.out.println("counter" + counter + " " + now_time);
-                    //System.out.println(pq.peek());
                     ans += pq.poll();
                     counter--;
                 }
 
                 saving(i);
-
                 counter = Math.min(counter, now_time);
             }
 
