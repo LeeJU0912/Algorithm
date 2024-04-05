@@ -1,8 +1,6 @@
 import java.io.*;
 import java.util.*;
 
-import static java.lang.Math.min;
-
 public class Main {
     static class point {
         int x, y;
@@ -31,7 +29,7 @@ public class Main {
 
     static int N, M;
     static int[][] board = new int[51][51];
-    static boolean[][][] visited = new boolean[51][51][2 << 6];
+    static boolean[][][] visited = new boolean[51][51][1 << 6];
     static int[] dx = {0, 0, 1, -1};
     static int[] dy = {1, -1, 0, 0};
 
@@ -51,10 +49,9 @@ public class Main {
             int now_y = pq.poll().y;
 
             if (board[now_x][now_y] == 2) {
-                ans = min(ans, now_time);
-                continue;
+                ans = now_time;
+                return;
             }
-
 
             for (int i = 0; i < 4; i++) {
                 int next_x = now_x + dx[i];
@@ -62,20 +59,24 @@ public class Main {
 
                 if (next_x < 0 || next_x >= N || next_y < 0 || next_y >= M) continue;
                 if (board[next_x][next_y] == 1) continue;
-                if (visited[next_x][next_y][now_key]) continue;
-                visited[next_x][next_y][now_key] = true;
 
                 if (board[next_x][next_y] >= 20) {
                     int shift = (1 << (board[next_x][next_y] - 20));
                     if ((now_key & shift) == 0) continue;
+                    if (visited[next_x][next_y][now_key]) continue;
+                    visited[next_x][next_y][now_key] = true;
                     pq.add(new INFO(now_time + 1, now_key, next_x, next_y));
                 }
                 else if (board[next_x][next_y] >= 10) {
+                    if (visited[next_x][next_y][now_key]) continue;
+                    visited[next_x][next_y][now_key] = true;
                     int shift = (1 << (board[next_x][next_y] - 10));
                     int next_key = (now_key | shift);
                     pq.add(new INFO(now_time + 1, next_key, next_x, next_y));
                 }
                 else {
+                    if (visited[next_x][next_y][now_key]) continue;
+                    visited[next_x][next_y][now_key] = true;
                     pq.add(new INFO(now_time + 1, now_key, next_x, next_y));
                 }
             }
@@ -106,6 +107,7 @@ public class Main {
                 }
                 else if (s.charAt(j) == '0') {
                     start = new point(i, j);
+                    visited[i][j][0] = true;
                 }
                 else if (s.charAt(j) == '1') {
                     board[i][j] = 2;
