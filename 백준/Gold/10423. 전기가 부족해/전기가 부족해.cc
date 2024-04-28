@@ -48,10 +48,11 @@ int main() {
         ans += now_size;
 
         for (int i = 0; i < graph[now_node].size(); i++) {
+            if (visited[graph[now_node][i].second]) continue;
             pq.push(graph[now_node][i]);
         }
     }
-    
+
     cout << ans;
 
     return 0;
