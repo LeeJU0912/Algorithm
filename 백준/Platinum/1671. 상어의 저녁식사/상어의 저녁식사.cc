@@ -1,35 +1,46 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 #define FastIO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 using namespace std;
 
+struct INFO {
+    int A, B, C;
+};
+
 int N;
+vector<INFO> save;
+bool visited[50];
+int node[50];
 
-vector<pair<int, pair<int, int>>> save;
+bool solve(int idx) {
+    if (visited[idx]) return false;
+    visited[idx] = true;
 
-vector<int> graph[51];
+    for (int i = 0; i < N; i++) {
+        if (idx == i) continue;
 
-int matching[51];
-bool visited[51];
-
-int ans;
-
-int comp(int a, int b) {
-    if (save[a].first == save[b].first && save[a].second.first == save[b].second.first && save[a].second.second == save[b].second.second) return 2;
-    else if (save[a].first >= save[b].first && save[a].second.first >= save[b].second.first && save[a].second.second >= save[b].second.second) return 1;
-    else if (save[a].first <= save[b].first && save[a].second.first <= save[b].second.first && save[a].second.second <= save[b].second.second) return 0;
-    else return -1;
-}
-
-bool dfs(int A) {
-    if (visited[A]) return false;
-    visited[A] = true;
-
-    for (int B : graph[A]) {
-        if (matching[B] == -1 || dfs(matching[B])) {
-            matching[B] = A;
-            return true;
+        INFO next = save[i];
+        if (save[idx].A == next.A && save[idx].B == next.B && save[idx].C == next.C) {
+            if (idx < i) {
+                if (node[i] == -1 || solve(node[i])) {
+                    node[i] = idx;
+                    return true;
+                }
+            }
+        }
+        else if ((save[idx].A > next.A && save[idx].B > next.B && save[idx].C > next.C)||
+                (save[idx].A == next.A && save[idx].B > next.B && save[idx].C > next.C)||
+                (save[idx].A > next.A && save[idx].B == next.B && save[idx].C > next.C)||
+                (save[idx].A > next.A && save[idx].B > next.B && save[idx].C == next.C)||
+                (save[idx].A == next.A && save[idx].B == next.B && save[idx].C > next.C)||
+                (save[idx].A > next.A && save[idx].B == next.B && save[idx].C == next.C)||
+                (save[idx].A == next.A && save[idx].B > next.B && save[idx].C == next.C)) {
+            if (node[i] == -1 || solve(node[i])) {
+                node[i] = idx;
+                return true;
+            }
         }
     }
+
     return false;
 }
 
@@ -37,27 +48,19 @@ int main() {
     FastIO
 
     cin >> N;
-
     for (int i = 0; i < N; i++) {
-        int a, b, c;
-        cin >> a >> b >> c;
-        save.push_back({a, {b, c}});
+        INFO x;
+        cin >> x.A >> x.B >> x.C;
+        save.push_back(x);
     }
 
-    for (int i = 0; i < N - 1; i++) {
-        for (int j = i + 1; j < N; j++) {
-            int val = comp(i, j);
-            if (val > 0) graph[i].push_back(j);
-            else if (val == 0) graph[j].push_back(i);
-        }
-    }
-
-    memset(matching, -1, sizeof(matching));
+    int ans = 0;
+    memset(node, -1, sizeof(node));
     for (int i = 0; i < N; i++) {
         memset(visited, false, sizeof(visited));
-        if (dfs(i)) ans++;
+        if (solve(i)) ans++;
         memset(visited, false, sizeof(visited));
-        if (dfs(i)) ans++;
+        if (solve(i)) ans++;
     }
 
     cout << N - ans;
