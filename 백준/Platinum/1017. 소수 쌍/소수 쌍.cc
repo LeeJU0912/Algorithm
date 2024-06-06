@@ -1,90 +1,82 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 #define FastIO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 using namespace std;
 
-int N, M;
+int N;
+vector<int> save;
+bool is_sosu[2001];
+bool visited[50];
+int node[50];
 
-vector<int> graph;
-int matching[51];
-bool visited[51];
-
-bool not_sosu[2001];
-
-int pick;
-int counter;
-
-vector<int> ans;
-
-bool dfs(int A) {
-    if (visited[A]) return false;
-    visited[A] = true;
-
-    for (int i = 1; i < N; i++) {
-        if (A == i || i == pick) continue;
-        if (not_sosu[graph[A] + graph[i]]) continue;
-
-        if (matching[i] == -1) {
-            counter++;
-            matching[i] = A;
+bool solve(int idx) {
+    if (visited[idx]) return false;
+    visited[idx] = true;
+    
+    int one = save[idx];
+    for (int i = 0; i < N; i++) {
+        int two = save[i];
+        
+        if (is_sosu[one + two]) continue;
+        if (node[i] == -1 || solve(node[i])) {
+            node[i] = idx;
             return true;
         }
     }
-
-    for (int i = 1; i < N; i++) {
-        if (A == i || i == pick) continue;
-        if (not_sosu[graph[A] + graph[i]]) continue;
-
-        if (dfs(matching[i])) {
-            matching[i] = A;
-            return true;
-        }
-    }
-
+    
     return false;
 }
 
 int main() {
     FastIO
 
+    is_sosu[1] = true;
     for (int i = 2; i <= sqrt(2000); i++) {
-        if (not_sosu[i]) continue;
+        if (is_sosu[i]) continue;
         for (int j = 2; i * j <= 2000; j++) {
-            not_sosu[i * j] = true;
+            is_sosu[i * j] = true;
         }
     }
-
+    
     cin >> N;
-
-    for (int i = 1; i <= N; i++) {
-        int temp;
-        cin >> temp;
-        graph.push_back(temp);
+    save = vector<int>(N);
+    for (int i = 0; i < N; i++) {
+        cin >> save[i];
     }
 
+    vector<int> ans;
     for (int i = 1; i < N; i++) {
-        if (not_sosu[graph[0] + graph[i]]) continue;
-        memset(matching, -1, sizeof(matching));
-        matching[0] = i;
-        matching[i] = 0;
-        pick = i;
-
-        counter = 2;
+        if (is_sosu[save[0] + save[i]]) continue;
+        memset(node, -1, sizeof(node));
+        node[0] = i;
+        node[i] = 0;
 
         for (int j = 1; j < N; j++) {
-            if (j == pick) continue;
+            if (i == j) continue;
+
             memset(visited, false, sizeof(visited));
-            dfs(j);
+            visited[0] = true;
+            visited[i] = true;
+            solve(j);
         }
-
-        if (counter == N) ans.push_back(graph[i]);
+        
+        bool chk = false;
+        for (int k = 0; k < N; k++) {
+            if (node[k] == -1) {
+                chk = true;
+                break;
+            }
+        }
+        if (!chk) {
+            ans.push_back(save[i]);
+        }
     }
-
+    
     if (ans.empty()) {
         cout << -1;
     }
     else {
         sort(ans.begin(), ans.end());
-        for (int i : ans) {
+        for (auto& i : ans) {
             cout << i << ' ';
         }
     }
