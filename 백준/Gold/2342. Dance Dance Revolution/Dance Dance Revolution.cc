@@ -1,20 +1,5 @@
-#include <iostream>
-#include <cmath>
-#include <ctime>
-#include <algorithm>
-#include <stack>
-#include <queue>
-#include <deque>
-#include <string>
-#include <vector>
-#include <tuple>
-#include <functional>
-#include <map>
-#include <set>
-#include <cstring>
-#include <array>
-#include <climits>
-
+#include <bits/stdc++.h>
+#define FastIO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 using namespace std;
 
 vector<int> v;
@@ -43,20 +28,14 @@ int solve(int idx, int left, int right) {
 }
 
 int main() {
-    ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+    FastIO
 
-    int N = 1;
-
-    int i = 0;
-
-    while (1) {
+    while(true) {
+        int N;
         cin >> N;
-        if (N == 0) {
-            break;
+        if (N == 0) break;
 
-        }
         v.push_back(N);
-        i++;
     }
 
     memset(dp, -1, sizeof(dp));
