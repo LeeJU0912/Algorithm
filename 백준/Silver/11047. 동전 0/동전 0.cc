@@ -1,48 +1,30 @@
-#include <iostream>
-#include <cmath>
-#include <ctime>
-#include <algorithm>
-#include <stack>
-#include <queue>
-#include <deque>
-#include <string>
-#include <vector>
-#include <tuple>
-#include <functional>
-#include <map>
-#include <set>
-#include <cstring>
-#include <array>
-
+#include <bits/stdc++.h>
+#define FastIO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 using namespace std;
 
+int N, K;
 int coin[10];
-int b;
-int hap;
-
-int plus1(int x) {
-	if (x > b) return 0;
-	hap += b / x;
-	b %= x;
-	return 0;
-}
-
+int ans;
 
 int main() {
-	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+    FastIO
 
-	int i;
-	int a;
+    cin >> N >> K;
+    for (int i = 0; i < N; i++) {
+        cin >> coin[i];
+    }
 
-	cin >> a >> b;
+    for (int i = N - 1; i >= 0; i--) {
+        if (coin[i] > K) continue;
+        if (K == 0) break;
+        int plus = K / coin[i];
 
-	for (i = 0; i < a; i++) {
-		cin >> coin[i];
-	}
-	for (i = a - 1; i >= 0; i--) {
-		plus1(coin[i]);
-	}
+        ans += plus;
 
-	cout << hap;
-	return 0;
+        K -= coin[i] * plus;
+    }
+
+    cout << ans;
+
+    return 0;
 }
