@@ -3,19 +3,17 @@
 using namespace std;
 
 long long n;
-int ans;
+int ans = 9;
 
 bool make_ans(int now, int plus) {
     long long calc = now;
     calc *= 10;
     calc += plus;
 
-    int temp = now;
-
-    while(temp) {
+    while(now) {
         calc *= 10;
-        calc += temp % 10;
-        temp /= 10;
+        calc += now % 10;
+        now /= 10;
     }
 
     if (calc <= n) return true;
@@ -60,7 +58,7 @@ int main() {
         solve(i, 0);
     }
 
-    cout << ans + 9;
+    cout << ans;
 
     return 0;
 }
