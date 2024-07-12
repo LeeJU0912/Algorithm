@@ -11,16 +11,11 @@ bool make_ans(int now, int plus) {
     calc += plus;
 
     int temp = now;
-    queue<int> stk;
-    while(temp) {
-        stk.push(temp % 10);
-        temp /= 10;
-    }
 
-    while(!stk.empty()) {
+    while(temp) {
         calc *= 10;
-        calc += stk.front();
-        stk.pop();
+        calc += temp % 10;
+        temp /= 10;
     }
 
     if (calc <= n) return true;
@@ -33,18 +28,12 @@ void solve(int now, int count) {
     long long calc = now;
 
     int temp = now;
-    queue<int> stk;
     while(temp) {
-        stk.push(temp % 10);
+        calc *= 10;
+        calc += temp % 10;
         temp /= 10;
     }
 
-    while(!stk.empty()) {
-        calc *= 10;
-        calc += stk.front();
-        stk.pop();
-    }
-    
     if (calc <= n) ans++;
     else return;
 
