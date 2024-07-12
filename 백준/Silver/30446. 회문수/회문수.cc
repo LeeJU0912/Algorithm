@@ -42,6 +42,7 @@ void solve(int now, int count) {
             ans++;
             solve(now * 10 + i, count + 1);
         }
+        else return;
     }
 }
 
