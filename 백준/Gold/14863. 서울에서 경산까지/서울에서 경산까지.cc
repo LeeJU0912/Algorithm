@@ -4,21 +4,20 @@ using namespace std;
 
 int N, K;
 
-vector<pair<int, int>> graph[101];
-int DP[100001];
+pair<int, int> graph[101][2];
+int DP[100][100001];
 
-int ans;
-
-void solve(int idx, int nowTime, int nowMoney) {
-    if (nowTime > K) return;
-    if (nowTime + DP[idx] > K) return;
+int solve(int idx, int nowTime, int nowMoney) {
+    if (nowTime > K) return -1e7;
     if (idx == N) {
-        ans = max(ans, nowMoney);
-        return;
+        return 0;
     }
+    if (DP[idx][nowTime]) return DP[idx][nowTime];
 
-    solve(idx + 1, nowTime + graph[idx][0].first, nowMoney + graph[idx][0].second);
-    solve(idx + 1, nowTime + graph[idx][1].first, nowMoney + graph[idx][1].second);
+    int first = solve(idx + 1, nowTime + graph[idx][0].first, nowMoney + graph[idx][0].second);
+    int second = solve(idx + 1, nowTime + graph[idx][1].first, nowMoney + graph[idx][1].second);
+
+    return DP[idx][nowTime] = max(first + graph[idx][0].second, second + graph[idx][1].second);
 }
 
 int main() {
@@ -29,17 +28,13 @@ int main() {
         int walk, walkMoney, bicycle, bicycleMoney;
         cin >> walk >> walkMoney >> bicycle >> bicycleMoney;
 
-        graph[i].emplace_back(walk, walkMoney);
-        graph[i].emplace_back(bicycle, bicycleMoney);
-    }
-
-    for (int i = N - 1; i >= 0; i--) {
-        DP[i] = DP[i + 1] + min(graph[i][0].first, graph[i][1].first);
+        graph[i][0] = {walk, walkMoney};
+        graph[i][1] = {bicycle, bicycleMoney};
     }
 
     solve(0, 0, 0);
 
-    cout << ans;
+    cout << DP[0][0];
 
     return 0;
 }
