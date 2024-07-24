@@ -1,57 +1,40 @@
-#include <iostream>
-#include <cmath>
-#include <ctime>
-#include <algorithm>
-#include <stack>
-#include <queue>
-#include <deque>
-#include <string>
-#include <vector>
-#include <tuple>
-#include <functional>
-#include <map>
-#include <set>
-#include <cstring>
-
+#include <bits/stdc++.h>
+#define FastIO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 using namespace std;
 
-vector<int> v[100000];
-int visited[100001];
-int temp[100001];
-int counter = 2;
+int N;
+vector<int> graph[100001];
+int parent[100001];
+bool visited[100001];
 
-void dfs(int start) {
-	visited[start] = 1;
-	for (int i = 0; i < v[start].size(); i++) {
-		int y = v[start][i];
-		if (!visited[y]) {
-			temp[y] = start;
-			dfs(y);
-		}
-			
-	}
+void solve(int idx) {
+    visited[idx] = true;
+    for (int i = 0; i < graph[idx].size(); i++) {
+        int next = graph[idx][i];
+
+        if (visited[next]) continue;
+
+        parent[next] = idx;
+        solve(next);
+    }
 }
 
 int main() {
-	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+    FastIO
 
-	int a, b, c;
-	int i;
+    cin >> N;
+    for (int i = 0; i < N - 1; i++) {
+        int a, b;
+        cin >> a >> b;
+        graph[a].push_back(b);
+        graph[b].push_back(a);
+    }
 
-	cin >> a;
-	cin.ignore();
+    solve(1);
 
-	for (i = 0; i < a - 1; i++) {
-		cin >> b >> c;
-		v[b].push_back(c);
-		v[c].push_back(b);
-	}
+    for (int i = 2; i <= N; i++) {
+        cout << parent[i] << '\n';
+    }
 
-	dfs(1);
-	
-	for (i = 2; i <= a; i++) {
-		cout << temp[i] << '\n';
-	}
-	
-	return 0;
+    return 0;
 }
