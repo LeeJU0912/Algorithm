@@ -57,16 +57,14 @@ void update_lazy_multiply(int node, int start, int end) {
     }
 }
 
-void update_range_plus(int node, int left, int right, int start, int end, long long val) {
-    update_lazy_multiply(node, left, right);
+void update_range_plus(int node, int left, int right, int start, int end, int val) {
     update_lazy_plus(node, left, right);
-    
+
     if (right < start || end < left) return;
     if (start <= left && right <= end) {
         lazy_plus[node] += val;
         lazy_plus[node] %= MOD;
 
-        update_lazy_multiply(node, left, right);
         update_lazy_plus(node, left, right);
         return;
     }
@@ -75,7 +73,7 @@ void update_range_plus(int node, int left, int right, int start, int end, long l
     tree[node] = (tree[node * 2] + tree[node * 2 + 1]) % MOD;
 }
 
-void update_range_multiply(int node, int left, int right, int start, int end, long long val) {
+void update_range_multiply(int node, int left, int right, int start, int end, int val) {
     update_lazy_multiply(node, left, right);
     update_lazy_plus(node, left, right);
 
