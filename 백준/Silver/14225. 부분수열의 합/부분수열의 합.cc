@@ -4,7 +4,7 @@ using namespace std;
 
 int N;
 vector<int> save;
-set<int> chk;
+unordered_set<int> chk;
 
 int main() {
     FastIO
@@ -15,9 +15,9 @@ int main() {
         cin >> x;
         save.push_back(x);
     }
-
+    
     for (int i = 0; i < N; i++) {
-        set<int> next = chk;
+        unordered_set<int> next = chk;
         for (int x : chk) {
             next.insert(x + save[i]);
         }
