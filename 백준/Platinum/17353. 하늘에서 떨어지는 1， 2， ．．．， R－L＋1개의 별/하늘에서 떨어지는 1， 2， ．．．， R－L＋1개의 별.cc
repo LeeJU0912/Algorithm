@@ -4,17 +4,17 @@ using namespace std;
 
 int N, Q;
 vector<long long> tree;
-vector<int> treeL;
+vector<int> treeUpdateCnt;
 vector<int> save;
 
 void update(int target, int val) {
     while(target <= N) {
         tree[target] += val;
         if (val > 0) {
-            treeL[target]++;
+            treeUpdateCnt[target]++;
         }
         else {
-            treeL[target]--;
+            treeUpdateCnt[target]--;
         }
         target += (target & -target);
     }
@@ -22,20 +22,15 @@ void update(int target, int val) {
 
 long long query(int X) {
     long long ret = 0;
+    long long ret2 = 0;
+    long long target = X;
+    
     while(X > 0) {
         ret += tree[X];
+        ret2 += treeUpdateCnt[X];
         X -= (X & -X);
     }
-    return ret;
-}
-
-long long queryL(int X) {
-    long long ret = 0;
-    while(X > 0) {
-        ret += treeL[X];
-        X -= (X & -X);
-    }
-    return ret;
+    return ret2 * (target + 1) - ret;
 }
 
 int main() {
@@ -43,7 +38,7 @@ int main() {
 
     cin >> N;
     tree = vector<long long>(N + 1);
-    treeL = vector<int>(N + 1);
+    treeUpdateCnt = vector<int>(N + 1);
     save = vector<int>(N + 1);
     for(int i = 1; i <= N; i++) {
         cin >> save[i];
@@ -57,13 +52,15 @@ int main() {
         if (order == 1) {
             int L, R;
             cin >> L >> R;
+
             update(L, L);
             update(R + 1, -L);
         }
         else if (order == 2) {
             int X;
             cin >> X;
-            cout << queryL(X) * (X + 1) - query(X) + save[X] << '\n';
+
+            cout << save[X] + query(X) << '\n';
         }
     }
 
