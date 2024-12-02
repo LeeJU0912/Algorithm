@@ -4,20 +4,7 @@ using namespace std;
 
 int N;
 vector<int> save;
-
-int ans = INT_MAX;
-
-void solve(int left, int idx, int cnt) {
-    if (ans < cnt) return;
-    if (left == 0) {
-        ans = min(ans, cnt);
-        return;
-    }
-    for (int i = idx; i < save.size(); i++) {
-        if (save[i] > left) continue;
-        solve(left - save[i], i, cnt + 1);
-    }
-}
+int DP[300001];
 
 int main() {
     FastIO
@@ -34,14 +21,21 @@ int main() {
         save.push_back(cnt);
     }
 
-    sort(save.begin(), save.end(), greater());
-
-    for (int i = 0; i < save.size(); i++) {
-        if (save[i] > N) continue;
-        solve(N - save[i], i, 1);
+    for (int i = 0; i <= N; i++) {
+        DP[i] = 1e9;
     }
 
-    cout << ans << '\n';
+    for (int i = 0; i < save.size(); i++) {
+        DP[save[i]] = 1;
+    }
+    
+    for (int i = 0; i < save.size(); i++) {
+        for (int j = save[i]; j <= N; j++) {
+            DP[j] = min(DP[j], DP[j - save[i]] + 1);
+        }
+    }
+
+    cout << DP[N];
 
     return 0;
 }
