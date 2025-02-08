@@ -4,34 +4,70 @@ using namespace std;
 
 int a, b, c, d;
 
-map<long long, int> mp;
+map<pair<int, int>, bool> visited;
+
+int ans = INT_MAX;
 
 void calc() {
-    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<>> pq;
+    queue<pair<int, pair<int, int>>> pq;
     pq.push({0, {0, 0}});
+    visited[{0, 0}] = true;
 
     while(!pq.empty()) {
-        int cnt = pq.top().first;
-        int l = pq.top().second.first;
-        int r = pq.top().second.second;
+        int cnt = pq.front().first;
+        int l = pq.front().second.first;
+        int r = pq.front().second.second;
         pq.pop();
 
-        if (mp.find(l * 1000000 + r) != mp.end()) continue;
-        mp[l * 1000000 + r] = cnt;
+        if (l == c && r == d) {
+            ans = min(ans, cnt);
+            return;
+        }
 
+        int nextL, nextR;
         if (l != a) {
-            pq.push({cnt + 1, {a, r}});
+            nextL = a;
+            nextR = r;
+            if (!visited[{nextL, nextR}]) {
+                visited[{nextL, nextR}] = true;
+                pq.push({cnt + 1, {nextL, nextR}});
+            }
         }
         if (l != 0) {
-            pq.push({cnt + 1, {0, r}});
-            pq.push({cnt + 1, {l - min(l, (b - r)), r + min(l, (b - r))}});
+            nextL = 0;
+            nextR = r;
+            if (!visited[{nextL, nextR}]) {
+                visited[{nextL, nextR}] = true;
+                pq.push({cnt + 1, {nextL, nextR}});
+            }
+            nextL = l - min(l, (b - r));
+            nextR = r + min(l, (b - r));
+            if (!visited[{nextL, nextR}]) {
+                visited[{nextL, nextR}] = true;
+                pq.push({cnt + 1, {nextL, nextR}});
+            }
         }
         if (r != b) {
-            pq.push({cnt + 1, {l, b}});
+            nextL = l;
+            nextR = b;
+            if (!visited[{nextL, nextR}]) {
+                visited[{nextL, nextR}] = true;
+                pq.push({cnt + 1, {nextL, nextR}});
+            }
         }
         if (r != 0) {
-            pq.push({cnt + 1, {l, 0}});
-            pq.push({cnt + 1, {l + min(r, (a - l)), r - min(r, (a - l))}});
+            nextL = l;
+            nextR = 0;
+            if (!visited[{nextL, nextR}]) {
+                visited[{nextL, nextR}] = true;
+                pq.push({cnt + 1, {nextL, nextR}});
+            }
+            nextL = l + min(r, (a - l));
+            nextR = r - min(r, (a - l));
+            if (!visited[{nextL, nextR}]) {
+                visited[{nextL, nextR}] = true;
+                pq.push({cnt + 1, {nextL, nextR}});
+            }
         }
     }
 }
@@ -43,11 +79,11 @@ int main() {
 
     calc();
 
-    if (mp.find(c * 1000000 + d) != mp.end()) {
-        cout << mp[c * 1000000 + d];
+    if (ans == INT_MAX) {
+        cout << -1;
     }
     else {
-        cout << -1;
+        cout << ans;
     }
 
     return 0;
