@@ -30,7 +30,7 @@ void bfs() {
 
         if (nowNode == N) {
             ans = min(ans, nowCnt + 2);
-            continue;
+            return;
         }
 
         for (int i = 0; i < stationToTube[nowNode].size(); i++) {
