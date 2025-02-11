@@ -3,25 +3,14 @@
 using namespace std;
 
 int N, K, M;
-vector<int> tubeToStation[100001];
-vector<int> stationToTube[100001];
-bool visited[100001];
+vector<int> graph[101001];
+int visited[101001];
 int ans = INT_MAX;
 
 void bfs() {
     queue<pair<int, int>> q;
+    q.push({1, 1});
     visited[1] = true;
-
-    for (int i = 0; i < stationToTube[1].size(); i++) {
-        int tube = stationToTube[1][i];
-
-        for (int j = 0; j < tubeToStation[tube].size(); j++) {
-            int otherStation = tubeToStation[tube][j];
-            if (visited[otherStation]) continue;
-            visited[otherStation] = true;
-            q.push({0, otherStation});
-        }
-    }
 
     while(!q.empty()) {
         int nowCnt = q.front().first;
@@ -29,18 +18,20 @@ void bfs() {
         q.pop();
 
         if (nowNode == N) {
-            ans = min(ans, nowCnt + 2);
+            ans = nowCnt;
             return;
         }
 
-        for (int i = 0; i < stationToTube[nowNode].size(); i++) {
-            int tube = stationToTube[nowNode][i];
+        for (int i = 0; i < graph[nowNode].size(); i++) {
+            int nextNode = graph[nowNode][i];
 
-            for (int j = 0; j < tubeToStation[tube].size(); j++) {
-                int otherStation = tubeToStation[tube][j];
-                if (visited[otherStation]) continue;
-                visited[otherStation] = true;
-                q.push({nowCnt + 1, otherStation});
+            if (visited[nextNode]) continue;
+            visited[nextNode] = true;
+            if (nextNode > 100000) {
+                q.push({nowCnt + 1, nextNode});
+            }
+            else {
+                q.push({nowCnt, nextNode});
             }
         }
     }
@@ -54,8 +45,8 @@ int main() {
         for (int j = 0; j < K; j++) {
             int x;
             cin >> x;
-            tubeToStation[i].push_back(x);
-            stationToTube[x].push_back(i);
+            graph[100000 + i].push_back(x);
+            graph[x].push_back(100000 + i);
         }
     }
 
