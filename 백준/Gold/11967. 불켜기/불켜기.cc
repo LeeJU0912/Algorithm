@@ -6,7 +6,7 @@ int N, M;
 bool board[101][101];
 bool visited[101][101];
 bool candidate[101][101];
-vector<pair<int, int>> on[100101];
+vector<pair<int, int>> on[101][101];
 
 int dx[4] = {0, 0, 1, -1};
 int dy[4] = {1, -1, 0, 0};
@@ -31,10 +31,9 @@ void solve() {
                 continue;
             }
 
-            int convert = (nowX << 8) | nowY;
-            for (int j = 0; j < on[convert].size(); j++) {
-                int onX = on[convert][j].first;
-                int onY = on[convert][j].second;
+            for (int j = 0; j < on[nowX][nowY].size(); j++) {
+                int onX = on[nowX][nowY][j].first;
+                int onY = on[nowX][nowY][j].second;
                 if (board[onX][onY]) continue;
                 board[onX][onY] = true;
                 canFind = true;
@@ -74,7 +73,7 @@ int main() {
     for (int i = 0; i < M; i++) {
         int a, b, c, d;
         cin >> a >> b >> c >> d;
-        on[(a << 8) | b].push_back({c, d});
+        on[a][b].push_back({c, d});
         candidate[c][d] = true;
     }
 
