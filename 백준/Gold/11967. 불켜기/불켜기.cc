@@ -26,14 +26,12 @@ void solve() {
             int nowY = q.front().second;
             q.pop();
 
-            if (candidate[nowX][nowY]) {
-                if (!board[nowX][nowY]) {
-                    q.push({nowX, nowY});
-                    continue;
-                }
+            if (!board[nowX][nowY]) {
+                q.push({nowX, nowY});
+                continue;
             }
 
-            int convert = nowX * 1000 + nowY;
+            int convert = (nowX << 8) | nowY;
             for (int j = 0; j < on[convert].size(); j++) {
                 int onX = on[convert][j].first;
                 int onY = on[convert][j].second;
@@ -76,7 +74,7 @@ int main() {
     for (int i = 0; i < M; i++) {
         int a, b, c, d;
         cin >> a >> b >> c >> d;
-        on[a * 1000 + b].push_back({c, d});
+        on[(a << 8) | b].push_back({c, d});
         candidate[c][d] = true;
     }
 
