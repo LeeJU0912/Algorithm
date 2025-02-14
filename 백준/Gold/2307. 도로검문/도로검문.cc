@@ -6,6 +6,7 @@ int N, M;
 vector<pair<int, int>> graph[1001];
 vector<pair<int, int>> links;
 bool cantGo[1001][1001];
+int trace[1001];
 int dist[1001];
 
 int mini;
@@ -36,6 +37,7 @@ void firstDijkstra() {
 
             if (nowDist + nextDist >= dist[nextNode]) continue;
             dist[nextNode] = nowDist + nextDist;
+            trace[nextNode] = nowNode;
 
             pq.push({dist[nextNode], nextNode});
         }
@@ -89,12 +91,17 @@ int main() {
         graph[a].push_back({t, b});
         graph[b].push_back({t, a});
 
-        links.push_back({a, b});
     }
 
     firstDijkstra();
 
-    for (int i = 0; i < M; i++) {
+    int node = N;
+    while(trace[node]) {
+        links.push_back({node, trace[node]});
+        node = trace[node];
+    }
+
+    for (int i = 0; i < links.size(); i++) {
         cantGo[links[i].first][links[i].second] = true;
         cantGo[links[i].second][links[i].first] = true;
 
