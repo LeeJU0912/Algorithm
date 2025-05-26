@@ -16,8 +16,8 @@ fun main(args: Array<String>) {
 
     var target = 0
 
-    var ans1 = 0
-    var ans2 = 0
+    var ans1 = 0L
+    var ans2 = 0L
     for (i in 0 until N) {
         if (A[i] % 2 == 0) {
             ans1 += (i - target++)
